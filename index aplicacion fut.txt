@@ -1,0 +1,234 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  BookOpen, 
+  CheckCircle2, 
+  Award, 
+  Flame, 
+  Volume2, 
+  RotateCw, 
+  ArrowRight, 
+  Check, 
+  X, 
+  Languages,
+  Code2,
+  GitBranch,
+  Star,
+  RefreshCw,
+  Trophy,
+  Heart
+} from 'lucide-react';
+
+const LANGUAGE_DATA = {
+  en: {
+    name: 'Inglés',
+    flag: '🇬🇧',
+    code: 'en-US',
+    grammar: [
+      {
+        title: 'Present Continuous vs Simple',
+        level: 'A2',
+        explanation: 'Usa el Present Continuous para acciones que ocurren AHORA. Usa el Present Simple para rutinas.',
+        examples: [
+          { src: 'I am coding right now.', tr: 'Estoy programando en este momento.' },
+          { src: 'I code every day.', tr: 'Programo todos los días.' }
+        ],
+        tip: 'Recuerda que los verbos de estado (like, love, need, know) casi nunca se usan en continuo.'
+      },
+      {
+        title: 'Modal Verbs: Should / Must / Can',
+        level: 'B1',
+        explanation: 'Los verbos modales modifican el significado de otros verbos expresando consejo, obligación o habilidad.',
+        examples: [
+          { src: 'You should review your code.', tr: 'Deberías revisar tu código (Consejo).' },
+          { src: 'You must pass the tests.', tr: 'Debes pasar las pruebas (Obligación).' }
+        ],
+        tip: 'Los modales NUNCA llevan "to" después (excepto ought to) y no cambian en tercera persona.'
+      }
+    ],
+    cards: [
+      { id: 1, front: 'Commit', back: 'Comprometer / Confirmar cambios', example: 'I will commit my changes.' },
+      { id: 2, front: 'Pull Request', back: 'Solicitud de extracción / revisión', example: 'Open a PR for review.' },
+      { id: 3, front: 'Branch', back: 'Rama de desarrollo', example: 'Create a new feature branch.' },
+      { id: 4, front: 'Repository', back: 'Repositorio / Almacén de código', example: 'Clone the repository locally.' },
+      { id: 5, front: 'Merge', back: 'Fusionar / Combinar', example: 'Merge branch main into develop.' }
+    ],
+    phrases: [
+      { category: 'Desarrollo', src: 'Can you review my PR?', tr: '¿Puedes revisar mi Pull Request?' },
+      { category: 'Desarrollo', src: 'Let\'s schedule a daily standup.', tr: 'Programemos una reunión diaria.' },
+      { category: 'Social', src: 'Where are you from?', tr: '¿De dónde eres?' },
+      { category: 'Social', src: 'Nice to meet you!', tr: '¡Gusto en conocerte!' }
+    ],
+    quiz: [
+      {
+        id: 1,
+        question: '¿Cuál es la forma correcta para una acción en progreso AHORA?',
+        options: ['I learn JavaScript', 'I am learning JavaScript', 'I learned JavaScript', 'I will learn JavaScript'],
+        correct: 1
+      },
+      {
+        id: 2,
+        question: '¿Qué significa "Commit" en el contexto de control de versiones?',
+        options: ['Eliminar archivo', 'Confirmar y guardar cambios', 'Descargar código', 'Crear una rama'],
+        correct: 1
+      },
+      {
+        id: 3,
+        question: 'Traducción correcta de "Debes revisar el código":',
+        options: ['You should review the code', 'You must review the code', 'You can review the code', 'You might review the code'],
+        correct: 1
+      }
+    ]
+  },
+  fr: {
+    name: 'Francés',
+    flag: '🇫🇷',
+    code: 'fr-FR',
+    grammar: [
+      {
+        title: 'Le Passé Composé',
+        level: 'A2',
+        explanation: 'Se utiliza para acciones completadas en el pasado. Se forma con Avoir u Être + Participio pasado.',
+        examples: [
+          { src: 'J\'ai codé un projet.', tr: 'He programado un proyecto.' },
+          { src: 'Je suis allé au bureau.', tr: 'Fui a la oficina.' }
+        ],
+        tip: 'La mayoría de verbos usan Avoir. Los de movimiento/cambio de estado usan Être.'
+      }
+    ],
+    cards: [
+      { id: 1, front: 'Bonjour', back: 'Buenos días / Hola', example: 'Bonjour tout le monde!' },
+      { id: 2, front: 'Fichier', back: 'Archivo', example: 'Enregistrer le fichier.' },
+      { id: 3, front: 'Répertoire', back: 'Directorio / Carpeta', example: 'Créer un nouveau répertoire.' },
+      { id: 4, front: 'Développeur', back: 'Desarrollador/a', example: 'Je suis développeur web.' }
+    ],
+    phrases: [
+      { category: 'Social', src: 'Comment allez-vous ?', tr: '¿Cómo está usted?' },
+      { category: 'Trabajo', src: 'C\'est une bonne idée.', tr: 'Es una buena idea.' }
+    ],
+    quiz: [
+      {
+        id: 1,
+        question: '¿Cómo se dice "Archivo" en francés?',
+        options: ['Dossier', 'Fichier', 'Bureau', 'Projet'],
+        correct: 1
+      }
+    ]
+  },
+  de: {
+    name: 'Alemán',
+    flag: '🇩🇪',
+    code: 'de-DE',
+    grammar: [
+      {
+        title: 'Verb Position in Main Clauses',
+        level: 'A1',
+        explanation: 'En una oración enunciativa principal, el verbo conjugado SIEMPRE ocupa la segunda posición.',
+        examples: [
+          { src: 'Ich programmiere heute.', tr: 'Yo programo hoy.' },
+          { src: 'Heute programmiere ich.', tr: 'Hoy programo yo.' }
+        ],
+        tip: 'No importa lo que pongas primero, el verbo va en la posición 2.'
+      }
+    ],
+    cards: [
+      { id: 1, front: 'Hallo', back: 'Hola', example: 'Hallo zusammen!' },
+      { id: 2, front: 'Datei', back: 'Archivo', example: 'Speichere die Datei.' },
+      { id: 3, front: 'Entwickler', back: 'Desarrollador', example: 'Er ist Entwickler.' }
+    ],
+    phrases: [
+      { category: 'Social', src: 'Wie geht es Ihnen?', tr: '¿Cómo le va a usted?' }
+    ],
+    quiz: [
+      {
+        id: 1,
+        question: '¿En qué posición va el verbo conjugado en una oración afirmativa en alemán?',
+        options: ['Primera', 'Segunda', 'Última', 'Tercera'],
+        correct: 1
+      }
+    ]
+  }
+};
+
+export default function GitLangHub() {
+  const [selectedLang, setSelectedLang] = useState('en');
+  const [activeTab, setActiveTab] = useState('flashcards');
+  const [cardIndex, setCardIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [xp, setXp] = useState(1450);
+  const [streak, setStreak] = useState(12);
+
+  // Quiz State
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizFinished, setQuizFinished] = useState(false);
+
+  const currentLangData = LANGUAGE_DATA[selectedLang] || LANGUAGE_DATA.en;
+
+  const handleSpeak = (text) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = currentLangData.code;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleQuizAnswer = (optionIdx) => {
+    if (selectedOption !== null) return;
+    setSelectedOption(optionIdx);
+
+    const isCorrect = optionIdx === currentLangData.quiz[quizIndex].correct;
+    if (isCorrect) {
+      setQuizScore((prev) => prev + 1);
+      setXp((prev) => prev + 50);
+    }
+
+    setTimeout(() => {
+      if (quizIndex + 1 < currentLangData.quiz.length) {
+        setQuizIndex((prev) => prev + 1);
+        setSelectedOption(null);
+      } else {
+        setQuizFinished(true);
+      }
+    }, 1200);
+  };
+
+  const resetQuiz = () => {
+    setQuizIndex(0);
+    setSelectedOption(null);
+    setQuizScore(0);
+    setQuizFinished(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0d1117] text-[#c9d1d9] font-sans antialiased">
+      {/* Top Navbar */}
+      <header className="border-b border-[#30363d] bg-[#161b22] px-6 py-4 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-50">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-[#238636] rounded-lg text-white">
+            <Code2 size={24} />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-white flex items-center gap-2">
+              GitLang Hub
+              <span className="text-xs px-2 py-0.5 rounded-full bg-[#21262d] text-[#8b949e] border border-[#30363d]">
+                v2.4.0
+              </span>
+            </h1>
+            <p className="text-xs text-[#8b949e]">Learn languages like open-source code</p>
+          </div>
+        </div>
+
+        {/* Stats & Selector */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 bg-[#0d1117] px-4 py-2 rounded-md border border-[#30363d]">
+            <div className="flex items-center gap-1.5 text-amber-500 font-semibold text-sm">
+              <Flame size={18} className="animate-pulse" />
+              <span>{streak} days</span>
+            </div>
+            <div className="h-4 w-[1px] bg-[#30363d]" />
+            <div className="flex items-center gap-1.5 text-emerald-400 font-semibold text-sm">
+              <Award size={18} />
+              <span>{xp} XP</span>
+            </div>
