@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fútbol Total - Historia, Estrellas y Trivia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #22c55e;
+            --accent-hover: #16a34a;
+            --text-light: #f8fafc;
+            --text-dark: #334155;
+            --bg-card: #ffffff;
+            --bg-body: #f1f5f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--text-light);
+            text-align: center;
+            padding: 3rem 1rem;
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #94a3b8;
+        }
+
+        nav {
+            background-color: #1e293b;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        h2.section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent-color);
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        /* Grid de Tarjetas */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-body ul {
+            list-style-type: none;
+        }
+
+        .card-body li {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .card-body li:last-child {
+            border-bottom: none;
+        }
+
+        /* Trivia Section */
+        .trivia-container {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .question-box {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            background-color: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #e2e8f0;
+            border-color: var(--accent-color);
+        }
+
+        .option-btn.correct {
+            background-color: #dcfce7;
+            border-color: var(--accent-color);
+            color: #166534;
+        }
+
+        .option-btn.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        #next-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        #next-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: #94a3b8;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>⚽ Fútbol Total</h1>
+        <p>Tu espacio definitivo para explorar leyendas, trofeos históricos y poner a prueba tu conocimiento.</p>
+    </header>
+
+    <nav>
+        <a href="#jugadores">Jugadores</a>
+        <a href="#trofeos">Trofeos</a>
+        <a href="#trivia">Trivia</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- SECCIÓN JUGADORES -->
+        <section id="jugadores">
+            <h2 class="section-title">Leyendas del Fútbol</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">Lionel Messi</div>
+                    <div class="card-body">
+                        <ul>
+                            <li><strong>Balones de Oro:</strong> 8</li>
+                            <li><strong>Copas del Mundo:</strong> 1 (Qatar 2022)</li>
+                            <li><strong>Champions League:</strong> 4</li>
+                            <li><strong>Goles oficiales:</strong> 800+</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Cristiano Ronaldo</div>
+                    <div class="card-body">
+                        <ul>
+                            <li><strong>Balones de Oro:</strong> 5</li>
+                            <li><strong>Eurocopa:</strong> 1 (Portugal 2016)</li>
+                            <li><strong>Champions League:</strong> 5</li>
+                            <li><strong>Goles oficiales:</strong> Máximo goleador histórico</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Pelé</div>
+                    <div class="card-body">
+                        <ul>
+                            <li><strong>Copas del Mundo:</strong> 3 (1958, 1962, 1970)</li>
+                            <li><strong>Goles oficiales:</strong> 1283 (reconocidos)</li>
+                            <li><strong>Legado:</strong> "O Rei" del fútbol mundial</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN TROFEOS -->
+        <section id="trofeos">
+            <h2 class="section-title">Trofeos Más Importantes</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">Copa Mundial de la FIFA</div>
+                    <div class="card-body">
+                        <p>El torneo internacional de selecciones nacionales más prestigioso del planeta, celebrado cada 4 años desde 1930.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">UEFA Champions League</div>
+                    <div class="card-body">
+                        <p>La competición anual de clubes de fútbol más importante de Europa, organizada por la UEFA y disputada por los mejores equipos.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Balón de Oro</div>
+                    <div class="card-body">
+                        <p>Premio individual anual otorgado por la revista francesa <em>France Football</em> al mejor jugador del mundo en el año.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN TRIVIA -->
+        <section id="trivia">
+            <h2 class="section-title">Trivia Futbolera</h2>
+            <div class="trivia-container">
+                <div id="quiz">
+                    <div class="question-box" id="question">Cargando pregunta...</div>
+                    <div class="options-grid" id="options"></div>
+                    <button id="next-btn" onclick="nextQuestion()">Siguiente Pregunta</button>
+                </div>
+                <div class="score-display" id="score"></div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Fútbol Total. Creado para GitHub Pages.</p>
+    </footer>
+
+    <script>
+        const quizData = [
+            {
+                question: "¿Qué país ganó la Copa Mundial de la FIFA en el año 2022?",
+                options: ["Francia", "Argentina", "Brasil", "Alemania"],
+                answer: 1
+            },
+            {
+                question: "¿Quién es el máximo goleador histórico de la UEFA Champions League?",
+                options: ["Lionel Messi", "Robert Lewandowski", "Cristiano Ronaldo", "Karim Benzema"],
+                answer: 2
+            },
+            {
+                question: "¿Cuántos Mundiales ganó Pelé como jugador con la selección de Brasil?",
+                options: ["1", "2", "3", "4"],
+                answer: 2
+            },
+            {
+                question: "¿En qué país se celebró la Copa del Mundo de 2014?",
+                options: ["Sudáfrica", "Brasil", "Rusia", "Qatar"],
+                answer: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionElement = document.getElementById("question");
+        const optionsElement = document.getElementById("options");
+        const nextButton = document.getElementById("next-btn");
+        const scoreElement = document.getElementById("score");
+
+        function loadQuestion() {
+            answered = false;
+            nextButton.style.display = "none";
+            const currentQuiz = quizData[currentQuestionIndex];
+            questionElement.innerText = currentQuiz.question;
+            optionsElement.innerHTML = "";
+
+            currentQuiz.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.classList.add("option-btn");
+                button.onclick = () => selectOption(index);
+                optionsElement.appendChild(button);
+            });
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+            
+            const currentQuiz = quizData[currentQuestionIndex];
+            const buttons = optionsElement.children;
+
+            if (selectedIndex === currentQuiz.answer) {
+                buttons[selectedIndex].classList.add("correct");
+                score++;
+            } else {
+                buttons[selectedIndex].classList.add("incorrect");
+                buttons[currentQuiz.answer].classList.add("correct");
+            }
+
+            // Deshabilitar todos los botones
+            for (let btn of buttons) {
+                btn.style.cursor = "default";
+            }
+
+            if (currentQuestionIndex < quizData.length - 1) {
+                nextButton.style.display = "block";
+            } else {
+                nextButton.style.display = "none";
+                scoreElement.innerText = `¡Juego terminado! Tu puntaje final es ${score} de ${quizData.length}. ⚽`;
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        // Inicializar trivia
+        loadQuestion();
+    </script>
+</body>
+</html>
